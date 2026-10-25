@@ -1,0 +1,38 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-[#eaeded] text-[#0f1111] antialiased;
+  }
+}
+
+/* Amazon-styled custom utilities */
+.amazon-btn-primary {
+  @apply bg-[#ffd814] hover:bg-[#f7ca00] active:bg-[#f2c200] text-[#0f1111] border border-[#fcd200] rounded-lg font-medium shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-[#e77600];
+}
+
+.amazon-btn-secondary {
+  @apply bg-[#ffa41c] hover:bg-[#fa8900] active:bg-[#e67a00] text-[#0f1111] border border-[#ff8f00] rounded-lg font-medium shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-[#e77600];
+}
+
+.amazon-btn-outline {
+  @apply bg-white hover:bg-gray-50 active:bg-gray-100 text-[#0f1111] border border-[#d5d9d9] rounded-lg font-medium shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-[#e77600];
+}
+
+.amazon-btn-dark {
+  @apply bg-[#232f3e] hover:bg-[#131921] active:bg-[#000] text-white border border-[#131921] rounded-lg font-medium shadow-sm transition-all focus:outline-none focus:ring-2 focus:ring-[#febd69];
+}
+
+.amazon-card {
+  @apply bg-white border border-[#d5d9d9] rounded-lg shadow-sm hover:shadow-md transition-shadow;
+}
+
+/* Leaflet container height fix */
+.leaflet-container {
+  width: 100%;
+  height: 100%;
+  border-radius: 0.5rem;
+  z-index: 10;
+}
