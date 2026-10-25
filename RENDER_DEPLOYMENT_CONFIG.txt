@@ -1,0 +1,139 @@
+================================================================================
+CIVICPULSE — RENDER DEPLOYMENT SPECIFICATION & CONFIGURATION TEXT FILE
+================================================================================
+
+This document contains all official Render configuration specifications,
+blueprint YAML, build commands, and environment variables needed to deploy 
+CivicPulse to Render (https://render.com).
+
+--------------------------------------------------------------------------------
+1. RENDER BLUEPRINT SPECIFICATION (render.yaml)
+--------------------------------------------------------------------------------
+Copy and paste this into your "render.yaml" file or use it as a Render Blueprint:
+
+services:
+  - type: web
+    name: civicpulse-app
+    runtime: python
+    plan: free
+    buildCommand: bash build.sh
+    startCommand: uvicorn backend.app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.9
+      - key: ENVIRONMENT
+        value: production
+      - key: SECRET_KEY
+        generateValue: true
+      - key: DATABASE_URL
+        value: sqlite:///./civicpulse.db
+
+--------------------------------------------------------------------------------
+2. RENDER DASHBOARD MANUAL CONFIGURATION VALUES (TEXT FIELDS)
+--------------------------------------------------------------------------------
+When creating a new Web Service manually in https://dashboard.render.com:
+
+• Service Type:         Web Service
+• Service Name:         civicpulse-app
+• Environment / Runtime:Python 3
+• Region:               Oregon (US West) or Frankfurt (EU Central)
+• Branch:               main
+• Root Directory:       . (leave blank or set to root)
+• Build Command:        bash build.sh
+• Start Command:        uvicorn backend.app.main:app --host 0.0.0.0 --port $PORT
+• Health Check Path:    /api/health
+
+--------------------------------------------------------------------------------
+3. REQUIRED ENVIRONMENT VARIABLES
+--------------------------------------------------------------------------------
+In the "Environment Variables" section of your Render Web Service:
+
+Key:                    Value:
+---------------------   --------------------------------------------------------
+PYTHON_VERSION          3.11.9
+ENVIRONMENT             production
+SECRET_KEY              civicpulse-secure-jwt-key-2026-render-prod
+DATABASE_URL            sqlite:///./civicpulse.db
+
+*(Note: If you link a Render PostgreSQL Database, simply set DATABASE_URL to 
+the Internal Database URL provided by Render, e.g. postgresql://user:pass@host/db)*
+
+--------------------------------------------------------------------------------
+4. RENDER BUILD SCRIPT (build.sh)
+--------------------------------------------------------------------------------
+This shell script builds both the React Vite frontend and FastAPI Python backend:
+
+#!/usr/bin/env bash
+set -o errexit
+
+if command -v python3 &>/dev/null; then
+    PY_BIN=python3
+else
+    PY_BIN=python
+fi
+
+echo "1. Installing Python dependencies..."
+$PY_BIN -m pip install --upgrade pip
+$PY_BIN -m pip install -r requirements.txt
+
+echo "2. Building React Frontend..."
+cd frontend
+npm install
+npm run build
+cd ..
+
+echo "3. Initializing Database and ML Model..."
+$PY_BIN -c "
+from backend.app.database import engine, Base, SessionLocal
+from backend.app.seed_data import seed_database
+Base.metadata.create_all(bind=engine)
+db = SessionLocal()
+seed_database(db)
+db.close()
+print('CivicPulse initialization completed successfully.')
+"
+
+echo "=== Build Completed Successfully! ==="
+
+--------------------------------------------------------------------------------
+5. PROCFILE (Procfile)
+--------------------------------------------------------------------------------
+web: uvicorn backend.app.main:app --host 0.0.0.0 --port ${PORT:-8000}
+
+--------------------------------------------------------------------------------
+6. DOCKERFILE OPTION (If deploying via Render Docker Runtime)
+--------------------------------------------------------------------------------
+FROM node:20-alpine AS frontend-builder
+WORKDIR /app/frontend
+COPY frontend/package*.json ./
+RUN npm install
+COPY frontend/ ./
+RUN npm run build
+
+FROM python:3.11-slim
+WORKDIR /app
+RUN apt-get update && apt-get install -y --no-install-recommends build-essential curl && rm -rf /var/lib/apt/lists/*
+COPY requirements.txt ./
+RUN pip install --no-cache-dir --upgrade pip && pip install --no-cache-dir -r requirements.txt
+COPY backend/ ./backend/
+COPY --from=frontend-builder /app/frontend/dist ./frontend/dist
+ENV PORT=8000
+ENV ENVIRONMENT=production
+EXPOSE 8000
+CMD ["sh", "-c", "uvicorn backend.app.main:app --host 0.0.0.0 --port ${PORT}"]
+
+--------------------------------------------------------------------------------
+7. PRE-POPULATED DEMO ACCOUNTS FOR EVALUATION
+--------------------------------------------------------------------------------
+• Citizen Portal Login:
+  URL:                  https://<your-render-app>.onrender.com/login
+  Email:                citizen@civicpulse.org
+  Password:             Password123!
+
+• Official Municipal Desk Login:
+  URL:                  https://<your-render-app>.onrender.com/official/login
+  Email:                official@civicpulse.org
+  Password:             Password123!
+================================================================================

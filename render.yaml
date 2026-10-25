@@ -1,10 +1,16 @@
+# Render Blueprint Specification File (render.yaml)
+# Docs: https://render.com/docs/blueprint-spec
+
 services:
-  # CivicPulse Fullstack Web Service on Render
+  # CivicPulse Fullstack Web Service (FastAPI + React Unified Service)
   - type: web
     name: civicpulse-app
     runtime: python
+    plan: free
     buildCommand: bash build.sh
     startCommand: uvicorn backend.app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /api/health
+    autoDeploy: true
     envVars:
       - key: PYTHON_VERSION
         value: 3.11.9

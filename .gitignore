@@ -20,10 +20,11 @@ dist-ssr/
 .env.local
 .env.*.local
 
-# Archives
+# Archives & Payloads
 *.zip
 *.tar.gz
 CivicPulse_GitHub_Ready.zip
+CivicPulse_base64.txt
 
 # IDE
 .idea/
