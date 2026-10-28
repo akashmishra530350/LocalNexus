@@ -4,23 +4,23 @@
 
 ---
 
-## 🌟 Key Highlights & Amazon-Inspired Experience
+## 🌟 Key Highlights & Experience
 
-CivicPulse is styled with a familiar, high-conversion **Amazon e-commerce aesthetic**, engineered to give citizens and municipal authorities distinct, role-tailored workflows:
+CivicPulse is styled with a familiar, high-conversion ** aesthetic**, engineered to give citizens and municipal authorities distinct, role-tailored workflows:
 
 - **Separate Login Portals**:
-  - 👤 **Citizen Portal (`/login`)**: Amazon-styled clean sign-in and registration for citizens to file reports, track status timelines, and endorse community issues.
-  - 🏛️ **Municipal Official Portal (`/official/login`)**: Amazon Seller / AWS Console-styled secure terminal for city authorities, department leads, and field dispatch engineers.
-- **Amazon Header Navigation (`AmazonNavbar`)**:
+  - 👤 **Citizen Portal (`/login`)**:clean sign-in and registration for citizens to file reports, track status timelines, and endorse community issues.
+  - 🏛️ **Municipal Official Portal (`/official/login`)**:  secure terminal for city authorities, department leads, and field dispatch engineers.
+- **Header Navigation (`Navbar`)**:
   - Deliver-To / Ward Selector (`Central Zone 110001`)
-  - Amazon-style Category dropdown with yellow search button
-  - "Returns & Reports" (Amazon "Returns & Orders" equivalent)
-  - Quick "Report Issue" action button (Amazon Cart equivalent)
-- **Amazon Order-Style Tracking Stepper (`AmazonTrackingStepper`)**:
+  -  Category dropdown with yellow search button
+  - "Returns & Reports" 
+  - Quick "Report Issue" action button 
+- ** Tracking Stepper **:
   - Real-time milestone tracking: `Reported` ➔ `AI Review & Triage` ➔ `Assigned to Dept` ➔ `Work In Progress` ➔ `Resolved & Closed`
-- **Faceted Amazon Filter Sidebar**:
+- ** Sidebar**:
   - Filter by lifecycle status, civic priority tier, and municipal ward.
-- **Amazon "Buy Box" Action Console**:
+- ** Action Console**:
   - Citizen endorsement upvote counter, dynamic SLA target, and municipal dispatch controls.
 
 ---
